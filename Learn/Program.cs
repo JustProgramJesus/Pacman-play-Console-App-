@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Data;
-using System.IO.IsolatedStorage;
-using System.Linq;
-using System.Management.Instrumentation;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Threading;
@@ -20,6 +12,14 @@ namespace Learn
             char[,] map = ReadMap("map.txt"); // Передаем аргумент (назавание файла карты) в наш метод ReadMap, который ее считает
             bool play = true; // Для бесконечного цикла, чтобы в дальнейшем расширить игру, например при прохождении, можно задать этой переменной false
             ConsoleKeyInfo pressedKey = new ConsoleKeyInfo('w', ConsoleKey.W, false, false, false); // По дефолту задаем кнопку, которая будет нажата
+
+            Task.Run(() =>
+            {
+                while (play)
+                {
+                    pressedKey = Console.ReadKey();
+                }
+            });
 
             int pacmanX = 1, pacmanY = 1; // Положение Pacman (его координаты)
             int score = 0; // Количество очков
@@ -56,7 +56,7 @@ namespace Learn
                 Console.ForegroundColor = ConsoleColor.Yellow; // Задаем цвет нашему Pacman, а именно желтый
                 Console.SetCursorPosition(pacmanX, pacmanY); // Устанавливаем курсор в позицию pacmanX и pacmanY, в дальнейшем будем реализовывать логику движения
                 Console.Write("@"); // Рисуем нашего Pacman
-                 Console.CursorVisible = false; // Отключаем видимость курсора
+                Console.CursorVisible = false; // Отключаем видимость курсора
 
                 Console.ForegroundColor = ConsoleColor.Red; // Задаем цвет красный
                 Console.SetCursorPosition(0, 15); // Устанавливаем позицию для отрисовки
@@ -69,9 +69,11 @@ namespace Learn
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write("]");
 
-                pressedKey = Console.ReadKey(); // Сохраняем текущую клавишу пользователя в переменную в формате char
+                
 
                 HandleInput(pressedKey, ref pacmanX, ref pacmanY, ref map, ref score, ref health); // Вся логика игры нашего героя
+
+                Thread.Sleep(600);
             }
         }
 
